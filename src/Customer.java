@@ -8,13 +8,14 @@ public class Customer {
     private String gender;
 
     //constructor
-    public Customer(String customerName, String customerID, String email, String address, String contactNumber, String dateOfBirth) {
+    public Customer(String customerName, String customerID, String email, String address, String contactNumber, String dateOfBirth, String customerGender) {
         this.customerName = customerName;
         this.customerID = customerID;
         this.email = email;
         this.address = address;
         this.contactNumber = contactNumber;
         this.dateOfBirth = dateOfBirth;
+        this.gender = customerGender;
     }
 
     //getters

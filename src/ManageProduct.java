@@ -31,7 +31,7 @@ public class ManageProduct {
         int productQuantity = input.nextInt();
 
         String queryString = "INSERT INTO Product (productId, productName, description, purchasePrice, sellingPrice, quantity) VALUES (?, ?, ?, ?, ?, ?)";
-        System.out.println(queryString);
+
         try {
             pstmt = conn.prepareStatement(queryString);
             pstmt.setString(1, productID);
@@ -239,44 +239,106 @@ public class ManageProduct {
             e.printStackTrace();
         }
     }
-    public Product searchProduct(String productId) {
+    public void searchProduct() {
+        Scanner input = new Scanner(System.in);
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        String query = "SELECT * FROM Product WHERE productId = ?";
-        Product product = null;
+        while (true) {
+            System.out.println("\nSearch Menu");
+            System.out.println("1. Search by Product ID");
+            System.out.println("2. Search by Product Name");
+            System.out.println("3. Search by Purchase Price");
+            System.out.println("4. Search by Selling Price");
+            System.out.println("5. Search by Quantity");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = input.nextInt();
+            input.nextLine();  // Consume newline left-over
+            String query = "";
+            String searchValue = "";
 
-        try {
-            conn = DatabaseConnector.getConnection();
-            pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, productId);
-            rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String productName = rs.getString("productName");
-                String description = rs.getString("description");
-                double purchasePrice = rs.getDouble("purchasePrice");
-                double sellingPrice = rs.getDouble("sellingPrice");
-                int quantity = rs.getInt("quantity");
-
-                product = new Product(productId, productName, description, purchasePrice, sellingPrice, quantity);
-            } else {
-                System.out.println("Product not found.");
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Product ID: ");
+                    searchValue = input.nextLine();
+                    query = "SELECT * FROM Product WHERE productId = ?";
+                    break;
+                case 2:
+                    System.out.print("Enter Product Name: ");
+                    searchValue = input.nextLine();
+                    query = "SELECT * FROM Product WHERE productName = ?";
+                    break;
+                case 3:
+                    System.out.print("Enter Purchase Price: ");
+                    searchValue = input.nextLine();
+                    query = "SELECT * FROM Product WHERE purchasePrice = ?";
+                    break;
+                case 4:
+                    System.out.print("Enter Selling Price: ");
+                    searchValue = input.nextLine();
+                    query = "SELECT * FROM Product WHERE sellingPrice = ?";
+                    break;
+                case 5:
+                    System.out.print("Enter Quantity: ");
+                    searchValue = input.nextLine();
+                    query = "SELECT * FROM Product WHERE quantity = ?";
+                    break;
+                case 6:
+                    return;
+                default:
+                    System.out.println("Invalid choice\n");
+                    continue;
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
+
             try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
+                conn = DatabaseConnector.getConnection();
+                pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, searchValue);
+                rs = pstmt.executeQuery();
+
+                ArrayList<Product> products = new ArrayList<>();
+                while (rs.next()) {
+                    String productId = rs.getString("productId");
+                    String productName = rs.getString("productName");
+                    String description = rs.getString("description");
+                    double purchasePrice = rs.getDouble("purchasePrice");
+                    double sellingPrice = rs.getDouble("sellingPrice");
+                    int quantity = rs.getInt("quantity");
+
+                    Product product = new Product(productId, productName, description, purchasePrice, sellingPrice, quantity);
+                    products.add(product);
+                }
+
+                if (products.isEmpty()) {
+                    System.out.println("No products found.");
+                } else {
+                    for (Product product : products) {
+                        displayProductDetails(product);
+                    }
+                }
+            } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (rs != null) rs.close();
+                    if (pstmt != null) pstmt.close();
+                    if (conn != null) conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
-        return product;
+    }
+    private void displayProductDetails(Product product) {
+        System.out.println("\nProduct ID: " + product.getProductId());
+        System.out.println("Product Name: " + product.getProductName());
+        System.out.println("Description: " + product.getDescription());
+        System.out.println("Purchase Price: " + product.getPurchasePrice());
+        System.out.println("Selling Price: " + product.getSellingPrice());
+        System.out.println("Quantity: " + product.getQuantity());
+        System.out.println("----------------------------------");
     }
     public ArrayList getAllProducts() {
         Connection con = null;
