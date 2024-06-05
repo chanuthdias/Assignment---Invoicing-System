@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.sql.Timestamp;
 
 public class ManageProduct {
     public void addProduct(){
@@ -39,6 +40,7 @@ public class ManageProduct {
             pstmt.setDouble(4, productPurchasePrice);
             pstmt.setDouble(5, productSellingPrice);
             pstmt.setInt(6, productQuantity);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -47,6 +49,22 @@ public class ManageProduct {
             int i = pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+
+        String queryString2 = "INSERT INTO logs (logEntry) VALUES (?)";
+        try {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            pstmt = conn.prepareStatement(queryString2);
+            pstmt.setString(1,  timestamp + "Product added " + productID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        try {
+            int i = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
         }
     }
     public void displayAllProducts() {

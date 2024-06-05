@@ -1,3 +1,7 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Manager {
@@ -28,7 +32,7 @@ public class Manager {
                     ig.getAllInvoices();
                     break;
                 case 4:
-                    System.out.println("4. Admin Tasks");
+                    showLogs();
                     break;
                 case 5:
                     System.exit(0);
@@ -108,6 +112,30 @@ public class Manager {
                 default:
                     System.out.println("Invalid choice\n");
             }
+        }
+    }
+    public void showLogs() {
+        Connection con = null;
+        Statement stmt = null;
+
+        String log = null;
+        ResultSet rs;
+
+        try {
+            con = DatabaseConnector.getConnection();
+            String queryString = "select * from logs";
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(queryString);
+
+            while (rs.next()) {
+                log = rs.getString("logEntry");
+                System.out.println(log);
+            }
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

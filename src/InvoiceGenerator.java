@@ -25,7 +25,7 @@ public class InvoiceGenerator {
                 break;
             }
         }
-
+        
         Invoice iInvoiceNumber = new Invoice(invoiceNumber, invoiceDate, c.getCustomerName(), c.getCustomerID());
 
         mp.displayAllProducts();
