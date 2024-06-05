@@ -6,6 +6,10 @@ public class Product {
     private double sellingPrice;
     private int quantity;
 
+    //invoice
+    private double unitPrice;
+    private int availableQuantity;
+
     // Constructor
     public Product(String productId, String productName, String description, double purchasePrice, double sellingPrice, int quantity) {
         this.productId = productId;
@@ -36,6 +40,14 @@ public class Product {
         return quantity;
     }
 
+    //invoice
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+    public int getAvailableQuantity() {
+        return availableQuantity;
+    }
+
     //setters
     public void setProductId(String productId) {
         this.productId = productId;
@@ -54,5 +66,13 @@ public class Product {
     }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    //invoice
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+    public void setAvailableQuantity(int availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 }

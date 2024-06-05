@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ManageProduct {
-
     public void addProduct(){
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -378,4 +377,62 @@ public class ManageProduct {
         }
         return products;
     }
+
+    public Product getProductByID(String productID) {
+        Scanner input = new Scanner(System.in);
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Product product = null;
+
+        String query = "SELECT * FROM Product WHERE productId = ?";
+
+        try {
+            conn = DatabaseConnector.getConnection();
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, productID);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String productId = rs.getString("productId");
+                String productName = rs.getString("productName");
+                String description = rs.getString("description");
+                double purchasePrice = rs.getDouble("purchasePrice");
+                double sellingPrice = rs.getDouble("sellingPrice");
+                int quantity = rs.getInt("quantity");
+
+                product = new Product(productId, productName, description, purchasePrice, sellingPrice, quantity);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return product;
+    }
+    public void updateQuantity(String prductID, double quantity) {
+        String updateQuery = null;
+        updateQuery = "UPDATE Product SET quantity = ? WHERE productId = ?";
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+
+            pstmt.setInt(1, (int) quantity);
+            pstmt.setString(2, prductID);
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Product updated successfully.");
+            } else {
+                System.out.println("Product not found.");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

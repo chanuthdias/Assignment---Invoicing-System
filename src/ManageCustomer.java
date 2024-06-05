@@ -391,15 +391,15 @@ public class ManageCustomer {
             rs = stmt.executeQuery(queryString);
 
             while (rs.next()) {
-                customerName = rs.getString("customerName");
                 customerID = rs.getString("customerID");
+                customerName = rs.getString("customerName");
                 customerEmail = rs.getString("email");
                 customerAddress = rs.getString("address");
                 customerContactNumber = rs.getString("contactNumber");
                 CustomerDOB = rs.getString("dateOfBirth");
                 CustomerGender = rs.getString("gender");
 
-                Customer c = new Customer(customerName,customerID,customerEmail,customerAddress,customerContactNumber,CustomerDOB,CustomerGender);
+                Customer c = new Customer(customerID,customerName,customerEmail,customerAddress,customerContactNumber,CustomerDOB,CustomerGender);
                 customers.add(c);
             }
 
@@ -409,5 +409,53 @@ public class ManageCustomer {
             throw new RuntimeException(e);
         }
         return customers;
+    }
+
+    public Customer getCustomerByID(String customerID) {
+        Scanner input = new Scanner(System.in);
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Customer customer = null;
+
+        String query = "SELECT * FROM Customer WHERE customerID = ?";
+
+        try {
+            conn = DatabaseConnector.getConnection();
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, customerID);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String invoiceCustomerID = rs.getString("customerID");
+                String customerName = rs.getString("customerName");
+                String customerEmail = rs.getString("email");
+                String customerAddress = rs.getString("address");
+                String customerContactNumber = rs.getString("contactNumber");
+                String CustomerDOB = rs.getString("dateOfBirth");
+                String CustomerGender = rs.getString("gender");
+
+                customer = new Customer(invoiceCustomerID, customerName, customerEmail, customerAddress, customerContactNumber, CustomerDOB, CustomerGender);
+
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return customer;
+    }
+    public void displayCustomer(Customer customer) {
+        // Implement the display logic here
+        System.out.println("\nCustomer Details:");
+        System.out.println("Customer ID: " + customer.getCustomerID());
+        System.out.println("Name: " + customer.getCustomerName());
+        System.out.println();
     }
 }

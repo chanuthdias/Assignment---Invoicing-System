@@ -8,9 +8,9 @@ public class Customer {
     private String gender;
 
     //constructor
-    public Customer(String customerName, String customerID, String email, String address, String contactNumber, String dateOfBirth, String customerGender) {
-        this.customerName = customerName;
+    public Customer(String customerID, String customerName, String email, String address, String contactNumber, String dateOfBirth, String customerGender) {
         this.customerID = customerID;
+        this.customerName = customerName;
         this.email = email;
         this.address = address;
         this.contactNumber = contactNumber;
@@ -63,11 +63,4 @@ public class Customer {
     public void setGender(String gender) {
         this.gender = gender;
     }
-
-    //Methods
-    public void addCustomer() {}
-    public void updateCustomer(){}
-    public void removeCustomer() {}
-    public Customer searchCustomer(String CustomerId) {return this;}
-
 }

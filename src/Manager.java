@@ -3,6 +3,8 @@ import java.util.Scanner;
 public class Manager {
     ManageProduct mp = new ManageProduct();
     ManageCustomer mc = new ManageCustomer();
+    InvoiceGenerator ig = new InvoiceGenerator();
+
     public void start() {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -22,7 +24,8 @@ public class Manager {
                     ManageCustomers();
                     break;
                 case 3:
-                    System.out.println("3. Invoice Generation");
+                    ig.invoiceGenerate(mc, mp);
+                    ig.getAllInvoices();
                     break;
                 case 4:
                     System.out.println("4. Admin Tasks");
