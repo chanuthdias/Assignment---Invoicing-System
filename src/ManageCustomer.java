@@ -16,20 +16,21 @@ public class ManageCustomer {
         }
 
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter Customer ID: ");
+        System.out.print("Enter Customer ID: ");
         String customerID = input.next();
-        System.out.println("Enter Customer name: ");
+        System.out.print("Enter Customer name: ");
         String customerName = input.next();
-        System.out.println("Enter Customer Email: ");
+        System.out.print("Enter Customer Email: ");
         String customerEmail = input.next();
-        System.out.println("Enter Customer address: ");
+        System.out.print("Enter Customer address: ");
         String customerAddress = input.next();
-        System.out.println("Enter Customer Contact Number: ");
+        System.out.print("Enter Customer Contact Number: ");
         String customerContactNumber = input.next();
-        System.out.println("Enter Customer Date of Birth: ");
+        System.out.print("Enter Customer Date of Birth: ");
         String CustomerDOB = input.next();
-        System.out.println("Enter Customers Gender: ");
+        System.out.print("Enter Customers Gender: ");
         String customerGender = input.next();
+        System.out.println();
 
         String queryString = "INSERT INTO Customer (customerID,customerName,email,address,contactNumber,dateOfBirth,gender) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -52,10 +53,32 @@ public class ManageCustomer {
             throw new RuntimeException(e);
         }
     }
+    public void displayAllCustomers() {
+        ArrayList<Customer> customers = getAllCustomers();
+        System.out.println("\nCUSTOMER DETAILS : ");
+        for (int i = 0; i < customers.size(); i++) {
+            Customer tempCustomer = customers.get(i);
+            System.out.println(i+1);
+            System.out.println("----------------------------------");
+            System.out.print("Customer ID : ");
+            System.out.println(tempCustomer.getCustomerID());
+            System.out.print("Customer Name : ");
+            System.out.println(tempCustomer.getCustomerName());
+            System.out.print("Customer Email address : ");
+            System.out.println(tempCustomer.getEmail());
+            System.out.print("Customer Address : ");
+            System.out.println(tempCustomer.getAddress());
+            System.out.print("Customer Contact Number : ");
+            System.out.println(tempCustomer.getContactNumber());
+            System.out.print("Customer date of Birth : ");
+            System.out.println(tempCustomer.getDateOfBirth());
+            System.out.print("Customer Gender : ");
+            System.out.println(tempCustomer.getGender());
+            System.out.println();
+        }
+    }
     public void updateCustomer() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter Customer ID to update: ");
-        String customerID = input.next();
         String newCustomerID = "";
         String customerName = "";
         String customerEmail = "";
@@ -64,6 +87,9 @@ public class ManageCustomer {
         String customerDOB = "";
         String customerGender = "";
         String updateQuery = null;
+
+        System.out.print("\nEnter Customer ID to update: ");
+        String customerID = input.next();
 
         while (true) {
             System.out.println("\nChange Menu");
@@ -79,7 +105,7 @@ public class ManageCustomer {
             int choice = input.nextInt();
             switch (choice) {
                 case 1:
-                    System.out.println("Enter new Customer ID: ");
+                    System.out.print("Enter new Customer ID: ");
                     newCustomerID = input.next();
                     updateQuery = "UPDATE Customer SET customerID = ? WHERE customerID = ?";
                     try (Connection conn = DatabaseConnector.getConnection();
@@ -99,7 +125,7 @@ public class ManageCustomer {
                     break;
 
                 case 2:
-                    System.out.println("Enter new Customer name: ");
+                    System.out.print("Enter new Customer name: ");
                     customerName = input.next();
                     updateQuery = "UPDATE Customer SET customerName = ? WHERE customerID = ?";
                     try (Connection conn = DatabaseConnector.getConnection();
@@ -118,7 +144,7 @@ public class ManageCustomer {
                     }
                     break;
                 case 3:
-                    System.out.println("Enter Customer Email: ");
+                    System.out.print("Enter Customer Email: ");
                     customerEmail = input.next();
                     updateQuery = "UPDATE Customer SET email = ? WHERE customerID = ?";
                     try (Connection conn = DatabaseConnector.getConnection();
@@ -137,7 +163,7 @@ public class ManageCustomer {
                     }
                     break;
                 case 4:
-                    System.out.println("Enter Customer Address: ");
+                    System.out.print("Enter Customer Address: ");
                     customerAddress = input.next();
                     updateQuery = "UPDATE Customer SET address = ? WHERE customerID = ?";
                     try (Connection conn = DatabaseConnector.getConnection();
@@ -156,7 +182,7 @@ public class ManageCustomer {
                     }
                     break;
                 case 5:
-                    System.out.println("Enter Customer Contact Number: ");
+                    System.out.print("Enter Customer Contact Number: ");
                     customerContactNumber = input.next();
                     updateQuery = "UPDATE Customer SET contactNumber = ? WHERE customerID = ?";
                     try (Connection conn = DatabaseConnector.getConnection();
@@ -175,7 +201,7 @@ public class ManageCustomer {
                     }
                     break;
                 case 6:
-                    System.out.println("Enter Customer Date of birth: ");
+                    System.out.print("Enter Customer Date of birth: ");
                     customerDOB = input.next();
                     updateQuery = "UPDATE Customer SET dateOfBirth = ? WHERE customerID = ?";
                     try (Connection conn = DatabaseConnector.getConnection();
@@ -194,7 +220,7 @@ public class ManageCustomer {
                     }
                     break;
                 case 7:
-                    System.out.println("Enter Customer Gender: ");
+                    System.out.print("Enter Customer Gender: ");
                     customerDOB = input.next();
                     updateQuery = "UPDATE Customer SET gender = ? WHERE customerID = ?";
                     try (Connection conn = DatabaseConnector.getConnection();
@@ -221,7 +247,7 @@ public class ManageCustomer {
     }
     public void removeCustomer() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter Customer ID to remove: ");
+        System.out.print("Enter Customer ID to remove: ");
         String customerID = input.next();
 
         String deleteQuery = "DELETE FROM Customer WHERE customerID = ?";
@@ -259,7 +285,7 @@ public class ManageCustomer {
             System.out.println("8. Exit");
             System.out.print("Enter your choice: ");
             int choice = input.nextInt();
-            input.nextLine();  // Consume newline left-over
+            input.nextLine();
             String query = "";
             String searchValue = "";
 
@@ -305,14 +331,13 @@ public class ManageCustomer {
                     System.out.println("Invalid choice\n");
                     continue;
             }
-
             try {
                 conn = DatabaseConnector.getConnection();
                 pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, searchValue);
                 rs = pstmt.executeQuery();
-
                 ArrayList<Customer> customers = new ArrayList<>();
+
                 while (rs.next()) {
                     String customerID = rs.getString("customerID");
                     String customerName = rs.getString("customerName");
@@ -325,12 +350,11 @@ public class ManageCustomer {
                     Customer customer = new Customer(customerID, customerName, customerEmail, customerAddress, customerContactNumber, CustomerDOB,CustomerGender);
                     customers.add(customer);
                 }
-
                 if (customers.isEmpty()) {
-                    System.out.println("No products found.");
+                    System.out.println("No customers found.\n");
                 } else {
                     for (Customer customer : customers) {
-                        displayCustomerDetails();
+                        displayCustomerDetails(customer);
                     }
                 }
             } catch (SQLException | ClassNotFoundException e) {
@@ -346,29 +370,15 @@ public class ManageCustomer {
             }
         }
     }
-    public void displayCustomerDetails() {
-        ArrayList<Customer> customers = getAllCustomers();
-        System.out.println("\nCUSTOMER DETAILS : ");
-        for (int i = 0; i < customers.size(); i++) {
-            Customer tempCustomer = customers.get(i);
-            System.out.println(i+1);
-            System.out.println("----------------------------------");
-            System.out.print("Customer ID : ");
-            System.out.println(tempCustomer.getCustomerID());
-            System.out.print("Customer Name : ");
-            System.out.println(tempCustomer.getCustomerName());
-            System.out.print("Customer Email address : ");
-            System.out.println(tempCustomer.getEmail());
-            System.out.print("Customer Address : ");
-            System.out.println(tempCustomer.getAddress());
-            System.out.print("Customer Contact Number : ");
-            System.out.println(tempCustomer.getContactNumber());
-            System.out.print("Customer date of Birth : ");
-            System.out.println(tempCustomer.getDateOfBirth());
-            System.out.print("Customer Gender : ");
-            System.out.println(tempCustomer.getGender());
-            System.out.println();
-        }
+    private void displayCustomerDetails(Customer customer) {
+        System.out.println("\nCustomer ID: " + customer.getCustomerID());
+        System.out.println("Customer Name: " + customer.getCustomerName());
+        System.out.println("Customer Email: " + customer.getEmail());
+        System.out.println("Customer Address: " + customer.getAddress());
+        System.out.println("Customer Contact Number: " + customer.getContactNumber());
+        System.out.println("Customer Date of Birth: " + customer.getDateOfBirth());
+        System.out.println("Customer Gender: " + customer.getGender());
+        System.out.println("----------------------------------");
     }
     public ArrayList getAllCustomers() {
         Connection con = null;
@@ -402,7 +412,6 @@ public class ManageCustomer {
                 Customer c = new Customer(customerID,customerName,customerEmail,customerAddress,customerContactNumber,CustomerDOB,CustomerGender);
                 customers.add(c);
             }
-
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {

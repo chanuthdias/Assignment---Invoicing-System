@@ -45,12 +45,6 @@ public class ManageProduct {
             throw new RuntimeException(e);
         }
 
-        try {
-            int i = pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
         String queryString2 = "INSERT INTO logs (logEntry) VALUES (?)";
         try {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -64,8 +58,10 @@ public class ManageProduct {
         try {
             int i = pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
+
+
     }
     public void displayAllProducts() {
         ArrayList<Product> products = getAllProducts();
@@ -91,7 +87,7 @@ public class ManageProduct {
     }
     public void updateProduct() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter product ID to update: ");
+        System.out.print("\nEnter product ID to update: ");
         String productID = input.next();
         String newProductID = "";
         String productName = "";
@@ -102,7 +98,7 @@ public class ManageProduct {
         String updateQuery = null;
 
         while (true) {
-            System.out.println("\nChange Menu");
+            System.out.print("\nChange Menu");
             System.out.println("1. Product ID");
             System.out.println("2. Product Name");
             System.out.println("3. description");
@@ -255,6 +251,7 @@ public class ManageProduct {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
     }
     public void searchProduct() {
         Scanner input = new Scanner(System.in);
@@ -272,7 +269,7 @@ public class ManageProduct {
             System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
             int choice = input.nextInt();
-            input.nextLine();  // Consume newline left-over
+            input.nextLine();
             String query = "";
             String searchValue = "";
 
@@ -314,8 +311,8 @@ public class ManageProduct {
                 pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, searchValue);
                 rs = pstmt.executeQuery();
-
                 ArrayList<Product> products = new ArrayList<>();
+
                 while (rs.next()) {
                     String productId = rs.getString("productId");
                     String productName = rs.getString("productName");
@@ -327,9 +324,8 @@ public class ManageProduct {
                     Product product = new Product(productId, productName, description, purchasePrice, sellingPrice, quantity);
                     products.add(product);
                 }
-
                 if (products.isEmpty()) {
-                    System.out.println("No products found.");
+                    System.out.println("No products found.\n");
                 } else {
                     for (Product product : products) {
                         displayProductDetails(product);

@@ -28,8 +28,7 @@ public class Manager {
                     ManageCustomers();
                     break;
                 case 3:
-                    ig.invoiceGenerate(mc, mp);
-                    ig.getAllInvoices();
+                    invoiceGenerate();
                     break;
                 case 4:
                     showLogs();
@@ -104,20 +103,45 @@ public class Manager {
                     mc.searchCustomer();
                     break;
                 case 5:
-                    mc.displayCustomerDetails();
+                    mc.displayAllCustomers();
                     break;
                 case 6:
-                    System.out.println();
                     start();
                 default:
                     System.out.println("Invalid choice\n");
             }
         }
     }
+    public void invoiceGenerate() {
+        Scanner input = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nInvoice Generator");
+            System.out.println("1. Remove an Invoice");
+            System.out.println("2. Add a Invoice");
+            System.out.println("3. Show all Invoices");
+            System.out.println("4. Exit");
+            int choice = input.nextInt();
+            switch (choice) {
+                case 1:
+                    ig.removeInvoice();
+                    break;
+                case 2:
+                    ig.addInvoice(mc, mp);
+                    break;
+                case 3:
+                    ig.getAllInvoices();
+                    break;
+                case 4:
+                    start();
+                default:
+                    System.out.println("Invalid choice\n");
+            }
+            break;
+        }
+    }
     public void showLogs() {
         Connection con = null;
         Statement stmt = null;
-
         String log = null;
         ResultSet rs;
 

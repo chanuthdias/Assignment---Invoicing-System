@@ -3,13 +3,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class InvoiceGenerator {
-    public void invoiceGenerate(ManageCustomer mc, ManageProduct mp) {
+
+    public void addInvoice(ManageCustomer mc, ManageProduct mp) {
         Scanner input = new Scanner(System.in);
         ArrayList<String> invoiceProducts = new ArrayList<>();
-
         Customer c;
 
-        System.out.println("Invoice Generator");
         System.out.print("Enter Invoice Number: ");
         String invoiceNumber = input.next();
         System.out.print("Enter Invoice Date: ");
@@ -19,16 +18,17 @@ public class InvoiceGenerator {
             String customerID = input.next();
             c = mc.getCustomerByID(customerID);
             if (c == null) {
-                System.out.println("Customer Not Found");
+                System.out.println("\nCustomer Not Found");
             } else {
                 mc.displayCustomer(c);
                 break;
             }
         }
-        
+
         Invoice iInvoiceNumber = new Invoice(invoiceNumber, invoiceDate, c.getCustomerName(), c.getCustomerID());
 
         mp.displayAllProducts();
+
         while (true) {
             Product p;
             System.out.print("Enter Product ID: ");
@@ -51,7 +51,9 @@ public class InvoiceGenerator {
                 }
                 else {
                     System.out.println("No quantity");
-                    System.out.print("Do you want to add more quantity? If so, please enter yes else no here: ");
+                    System.out.print("Enter quantity you want to add: ");
+                    String quantity = input.next();
+                    mp.updateQuantity(productID, Double.parseDouble(quantity));
                 }
             }
             String choice = input.next();
@@ -99,7 +101,30 @@ public class InvoiceGenerator {
             }
         }
     }
+    public void removeInvoice() {
+        Scanner input = new Scanner(System.in);
 
+        System.out.print("Enter Invoice ID to remove: ");
+        String invoiceID = input.next();
+
+        String deleteQuery = "DELETE FROM invoice WHERE invoiceNumber = ?";
+
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(deleteQuery)) {
+
+            pstmt.setString(1, invoiceID);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Invoice removed successfully.");
+            } else {
+                System.out.println("Invoice not found.");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
     public void getAllInvoices() {
         Connection con = null;
         Statement stmt = null;
@@ -122,7 +147,7 @@ public class InvoiceGenerator {
                 String unitPriceList = rs.getString("unitPriceList");
                 String discountList = rs.getString("discountList");
 
-                System.out.println("Invoice Number: " + invoiceNumber);
+                System.out.println("\nInvoice Number: " + invoiceNumber);
                 System.out.println("Invoice Date: " + invoiceDate);
                 System.out.println("Customer Name: " + customerName);
                 System.out.println("Customer ID: " + customerID);
@@ -131,6 +156,7 @@ public class InvoiceGenerator {
                 System.out.println("Units Per Product List: " + unitsPerProductList);
                 System.out.println("Unit Price List: " + unitPriceList);
                 System.out.println("Discount List: " + discountList);
+                System.out.println();
             }
 
         } catch (ClassNotFoundException | SQLException e) {
@@ -144,7 +170,6 @@ public class InvoiceGenerator {
             }
         }
     }
-
     private String convertListToString(ArrayList<?> list) {
         StringBuilder sb = new StringBuilder();
         for (Object item : list) {
@@ -155,4 +180,5 @@ public class InvoiceGenerator {
         }
         return sb.toString();
     }
+
 }

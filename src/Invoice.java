@@ -29,35 +29,27 @@ public class Invoice {
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
-
     public String getInvoiceDate() {
         return invoiceDate;
     }
-
     public String getCustomerName() {
         return customerName;
     }
-
     public String getCustomerID() {
         return customerID;
     }
-
     public ArrayList<String> getProductIDList() {
         return productIDList;
     }
-
     public ArrayList<String> getProductNameList() {
         return productNameList;
     }
-
     public ArrayList<Double> getUnitsPerProductList() {
         return unitsPerProductList;
     }
-
     public ArrayList<Double> getUnitPriceList() {
         return unitPriceList;
     }
-
     public ArrayList<Double> getDiscountList() {
         return discountList;
     }
@@ -66,15 +58,12 @@ public class Invoice {
     public void setInvoiceNumber(String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
     }
-
     public void setInvoiceDate(String invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
-
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
-
     public void addProduct(String name, String id, double numUnits, double unitPrice, double discount) {
         productNameList.add(name);
         productIDList.add(id);
